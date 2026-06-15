@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./dist",
+
+        "module": "commonjs",
+        "target": "es6",
+        "types": ["node"],
+
+        "esModuleInterop": true,
+
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "allowUnreachableCode": false,
+        "paths": {
+            "@/*": ["./src/*"],
+        },
+
+        "strict": true,
+        "jsx": "react-jsx",
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "skipLibCheck": true,
+        "noEmitOnError": true,
+    },
+    "include": ["src"],
+}
