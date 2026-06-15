@@ -1,11 +1,12 @@
 #! /usr/bin/env node
 
+import { execSync } from "child_process";
+import JsonData from "./json";
+
 const { Command } = require("commander");
 const figlet = require("figlet");
 
 const program = new Command();
-
-console.log(figlet.textSync("EDT - EcoleDirecte"));
 
 program
     .version("1.0.0")
@@ -23,6 +24,23 @@ program
     .option("-r, --repo <url>", "Enregistre l'url du repo dans 'user.json'.")
     .option("-U, --update", "Met à jour le fichier '.ics' sur le repo")
     .option("-d, --delete", "Supprime le fichier 'user.json'.")
+    .addHelpText("beforeAll", figlet.textSync("EDT - EcoleDirecte"))
     .parse(process.argv);
 
 const options = program.opts();
+let data = new JsonData();
+
+if (options.username) {
+    try {
+        data.username = options.username;
+    } catch {
+        execSync("pwd && touch ./user/user.json", { stdio: "ignore" });
+        data.username = options.username;
+    } finally {
+        data.updateJson();
+    }
+}
+
+if (!process.argv.slice(2).length) {
+    program.outputHelp();
+}
