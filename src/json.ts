@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import { execSync } from "child_process";
 
 export default class JsonData {
     public _username: string;
@@ -37,11 +38,11 @@ export default class JsonData {
 
     updateJson(): void {
         const data = {
-            username: this._username,
-            password: this._password,
-            repoUrl: this._repoUrl,
+            username: this.readJson("username"),
+            password: this.readJson("password"),
+            repoUrl: this.readJson("repoUrl"),
         };
-
+        console.log(data);
         fs.writeFileSync(
             "./user/user.json",
             JSON.stringify(data, null, 2),
@@ -50,12 +51,18 @@ export default class JsonData {
     }
 
     readJson(dataType: string | null = null): string[] | string {
-        const content = fs.readFileSync("./user/user.json", "utf-8");
-        const data = JSON.parse(content);
+        try {
+            const content = fs.readFileSync("./user/user.json", "utf-8");
+        } catch {
+            execSync("touch ./user/user.json", { stdio: "ignore" });
+        } finally {
+            const content = fs.readFileSync("./user/user.json", "utf-8");
+            const data = JSON.parse(content);
 
-        if (!dataType) {
-            return data;
+            if (!dataType) {
+                return data;
+            }
+            return data[`${dataType}`];
         }
-        return data[`${dataType}`];
     }
 }
