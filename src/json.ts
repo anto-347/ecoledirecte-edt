@@ -1,16 +1,16 @@
 import * as fs from "fs";
-import { execSync } from "child_process";
 import { type dataJson } from "./utils";
 
 export default class JsonData {
     public _username: string;
     public _password: string;
-    public _repoUrl: string;
+    public _githubUsername: string;
+    // public _githubKey
 
     constructor() {
         this._username = "";
         this._password = "";
-        this._repoUrl = "";
+        this._githubUsername = "";
     }
 
     public get username(): string {
@@ -29,22 +29,26 @@ export default class JsonData {
         this._password = p;
     }
 
-    public get repoUrl(): string {
-        return this._repoUrl;
+    public get githubUsername(): string {
+        return this._githubUsername;
     }
 
-    public set repoUrl(r: string) {
-        this._repoUrl = r;
+    public set githubUsername(g: string) {
+        this._githubUsername = g;
     }
 
     updateJson({
         username,
         password,
-        repoUrl,
-    }: { username?: string; password?: string; repoUrl?: string } = {}): void {
+        githubUsername,
+    }: {
+        username?: string;
+        password?: string;
+        githubUsername?: string;
+    } = {}): void {
         let presentUsername: string;
         let presentPassword: string;
-        let presentRepoUrl: string;
+        let presentGithubUsername: string;
 
         username
             ? (presentUsername = username)
@@ -54,16 +58,18 @@ export default class JsonData {
             ? (presentPassword = password)
             : (presentPassword = this.readJson("password") as string);
 
-        repoUrl
-            ? (presentRepoUrl = repoUrl)
-            : (presentRepoUrl = this.readJson("repoUrl") as string);
+        githubUsername
+            ? (presentGithubUsername = githubUsername)
+            : (presentGithubUsername = this.readJson(
+                  "githubUsername",
+              ) as string);
 
         const data = {
             username: presentUsername,
             password: presentPassword,
-            repoUrl: presentRepoUrl,
+            githubUsername: presentGithubUsername,
         };
-        console.log(data);
+
         fs.writeFileSync(
             "./user/user.json",
             JSON.stringify(data, null, 2),

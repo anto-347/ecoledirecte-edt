@@ -14,4 +14,4 @@ export const init = (): void => {
         execSync("touch ./user/user.json", { stdio: "ignore" });
 };
 
-export type dataJson = "username" | "password" | "repoUrl";
+export type dataJson = "username" | "password" | "githubUsername";

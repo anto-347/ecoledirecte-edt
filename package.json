@@ -12,6 +12,7 @@
     "license": "ISC",
     "type": "commonjs",
     "dependencies": {
+        "@octokit/rest": "^22.0.1",
         "commander": "^15.0.0",
         "figlet": "^1.11.0"
     },

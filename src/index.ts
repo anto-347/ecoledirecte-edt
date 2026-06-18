@@ -22,14 +22,17 @@ program
         "-p, --password <password>",
         "Enregistre un mot de passe dans 'user.json'.",
     )
-    .option("-r, --repo <url>", "Enregistre l'url du repo dans 'user.json'.")
+    .option(
+        "-g, --github <GitHub username>",
+        "Enregistre votre nom d'utilisateur GitHub dans 'user.json'.",
+    )
     .option("-U, --update", "Met à jour le fichier '.ics' sur le repo")
     .option("-d, --delete", "Supprime le fichier 'user.json'.")
     .addHelpText("beforeAll", figlet.textSync("EDT - EcoleDirecte"))
     .parse(process.argv);
 
 const options = program.opts();
-let data = new JsonData();
+let data: JsonData = new JsonData();
 
 if (options.username) {
     init();
@@ -43,10 +46,10 @@ if (options.password) {
     data.updateJson({ password: options.password });
 }
 
-if (options.repo) {
+if (options.github) {
     init();
-    data.repoUrl = options.repo;
-    data.updateJson({ repoUrl: options.repo });
+    data.githubUsername = options.github;
+    data.updateJson({ githubUsername: options.github });
 }
 
 if (options.delete) {
