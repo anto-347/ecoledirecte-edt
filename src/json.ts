@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import { execSync } from "child_process";
+import { type dataJson } from "./utils";
 
 export default class JsonData {
     public _username: string;
@@ -36,11 +37,31 @@ export default class JsonData {
         this._repoUrl = r;
     }
 
-    updateJson(): void {
+    updateJson({
+        username,
+        password,
+        repoUrl,
+    }: { username?: string; password?: string; repoUrl?: string } = {}): void {
+        let presentUsername: string;
+        let presentPassword: string;
+        let presentRepoUrl: string;
+
+        username
+            ? (presentUsername = username)
+            : (presentUsername = this.readJson("username") as string);
+
+        password
+            ? (presentPassword = password)
+            : (presentPassword = this.readJson("password") as string);
+
+        repoUrl
+            ? (presentRepoUrl = repoUrl)
+            : (presentRepoUrl = this.readJson("repoUrl") as string);
+
         const data = {
-            username: this.readJson("username"),
-            password: this.readJson("password"),
-            repoUrl: this.readJson("repoUrl"),
+            username: presentUsername,
+            password: presentPassword,
+            repoUrl: presentRepoUrl,
         };
         console.log(data);
         fs.writeFileSync(
@@ -50,12 +71,8 @@ export default class JsonData {
         );
     }
 
-    readJson(dataType: string | null = null): string[] | string {
+    readJson(dataType: dataJson | null = null): string[] | string {
         try {
-            const content = fs.readFileSync("./user/user.json", "utf-8");
-        } catch {
-            execSync("touch ./user/user.json", { stdio: "ignore" });
-        } finally {
             const content = fs.readFileSync("./user/user.json", "utf-8");
             const data = JSON.parse(content);
 
@@ -63,6 +80,8 @@ export default class JsonData {
                 return data;
             }
             return data[`${dataType}`];
+        } catch {
+            return "";
         }
     }
 }

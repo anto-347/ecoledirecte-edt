@@ -2,6 +2,7 @@
 
 import { execSync } from "child_process";
 import JsonData from "./json";
+import { init } from "./utils";
 
 const { Command } = require("commander");
 const figlet = require("figlet");
@@ -31,47 +32,24 @@ const options = program.opts();
 let data = new JsonData();
 
 if (options.username) {
-    try {
-        data.username = options.username;
-    } catch {
-        const directory = execSync("ls", { encoding: "utf-8" }).split("\n");
-        if (!directory.includes("user"))
-            execSync("mkdir user", { stdio: "ignore" });
-        execSync("touch ./user/user.json", { stdio: "ignore" });
-        data.username = options.username;
-    } finally {
-        data.updateJson();
-    }
+    init();
+    data.username = options.username;
+    data.updateJson({ username: options.username });
 }
 
 if (options.password) {
-    try {
-        data.password = options.password;
-    } catch {
-        const directory = execSync("ls", { encoding: "utf-8" }).split("\n");
-        if (!directory.includes("user"))
-            execSync("mkdir user", { stdio: "ignore" });
-        execSync("touch ./user/user.json", { stdio: "ignore" });
-        data.password = options.password;
-    } finally {
-        data.updateJson();
-    }
+    init();
+    data.password = options.password;
+    data.updateJson({ password: options.password });
 }
 
 if (options.repo) {
-    try {
-        data.repoUrl = options.repo;
-    } catch {
-        const directory = execSync("ls", { encoding: "utf-8" }).split("\n");
-        if (!directory.includes("user"))
-            execSync("mkdir user", { stdio: "ignore" });
-        execSync("touch ./user/user.json", { stdio: "ignore" });
-        data.repoUrl = options.repo;
-    } finally {
-        data.updateJson();
-    }
+    init();
+    data.repoUrl = options.repo;
+    data.updateJson({ repoUrl: options.repo });
 }
 
 if (!process.argv.slice(2).length) {
+    init();
     program.outputHelp();
 }
