@@ -54,6 +54,10 @@ if (options.delete) {
     execSync("rm -f user/user.json", { stdio: "ignore" });
 }
 
+if (options.update) {
+    //
+}
+
 if (!process.argv.slice(2).length) {
     init();
     program.outputHelp();
