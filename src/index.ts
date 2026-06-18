@@ -49,6 +49,11 @@ if (options.repo) {
     data.updateJson({ repoUrl: options.repo });
 }
 
+if (options.delete) {
+    init();
+    execSync("rm -f user/user.json", { stdio: "ignore" });
+}
+
 if (!process.argv.slice(2).length) {
     init();
     program.outputHelp();
