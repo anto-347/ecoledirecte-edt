@@ -5,12 +5,13 @@ export default class JsonData {
     public _username: string;
     public _password: string;
     public _githubUsername: string;
-    // public _githubKey
+    public _githubKey: string;
 
     constructor() {
         this._username = "";
         this._password = "";
         this._githubUsername = "";
+        this._githubKey = "";
     }
 
     public get username(): string {
@@ -37,18 +38,29 @@ export default class JsonData {
         this._githubUsername = g;
     }
 
+    public get githubKey(): string {
+        return this._githubKey;
+    }
+
+    public set githubKey(k: string) {
+        this._githubKey = k;
+    }
+
     updateJson({
         username,
         password,
         githubUsername,
+        githubKey,
     }: {
         username?: string;
         password?: string;
         githubUsername?: string;
+        githubKey?: string;
     } = {}): void {
         let presentUsername: string;
         let presentPassword: string;
         let presentGithubUsername: string;
+        let presentGithubKey: string;
 
         username
             ? (presentUsername = username)
@@ -64,10 +76,15 @@ export default class JsonData {
                   "githubUsername",
               ) as string);
 
+        githubKey
+            ? (presentGithubKey = githubKey)
+            : (presentGithubKey = this.readJson("githubKey") as string);
+
         const data = {
             username: presentUsername,
             password: presentPassword,
             githubUsername: presentGithubUsername,
+            githubKey: presentGithubKey,
         };
 
         fs.writeFileSync(
