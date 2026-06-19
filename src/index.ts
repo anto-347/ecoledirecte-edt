@@ -2,13 +2,15 @@
 
 import { execSync } from "child_process";
 import { Octokit } from "@octokit/rest";
+import { Command } from "commander";
+import figlet from "figlet";
 
-import JsonData from "./json";
-import { init } from "./utils";
-import { cookieGTK, login } from "./ed";
+import JsonData from "./json.js";
+import { init } from "./utils.js";
+import { cookieGTK, login } from "./ed.js";
 
-const { Command } = require("commander");
-const figlet = require("figlet");
+// const { Command } = require("commander");
+// const figlet = require("figlet");
 
 const program = new Command();
 
@@ -41,36 +43,36 @@ program
 const options = program.opts();
 let data: JsonData = new JsonData();
 
-if (options.username) {
+if (options["username"]) {
     init();
-    data.username = options.username;
-    data.updateJson({ username: options.username });
+    data.username = options["username"];
+    data.updateJson({ username: options["username"] });
 }
 
-if (options.password) {
+if (options["password"]) {
     init();
-    data.password = options.password;
-    data.updateJson({ password: options.password });
+    data.password = options["password"];
+    data.updateJson({ password: options["password"] });
 }
 
-if (options.github) {
+if (options["github"]) {
     init();
-    data.githubUsername = options.github;
-    data.updateJson({ githubUsername: options.github });
+    data.githubUsername = options["github"];
+    data.updateJson({ githubUsername: options["github"] });
 }
 
-if (options.key) {
+if (options["key"]) {
     init();
-    data.githubKey = options.key;
-    data.updateJson({ githubKey: options.key });
+    data.githubKey = options["key"];
+    data.updateJson({ githubKey: options["key"] });
 }
 
-if (options.delete) {
+if (options["delete"]) {
     init();
     execSync("rm -f user/user.json", { stdio: "ignore" });
 }
 
-if (options.update) {
+if (options["update"]) {
     const authOctokit = data.readJson("githubKey");
 
     if (!authOctokit) {
@@ -95,9 +97,11 @@ if (options.update) {
         );
         console.log("Veuillez l'enregistrer avec 'edt -p <password>'.");
     } else {
-        const cookie = await cookieGTK();
-        console.log(cookie, typeof cookie);
-        // const { token, id } = login(data, cookie);
+        const cookie: string = (await cookieGTK()) as string;
+        const loginData: (string | boolean)[] = await login(data, cookie);
+        console.log(loginData);
+        console.log("*********");
+        console.log(typeof loginData);
 
         const octokit = new Octokit({ auth: data.readJson("githubKey") });
     }

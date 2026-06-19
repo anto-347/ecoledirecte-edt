@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { type dataJson } from "./utils";
+import { type dataJson } from "./utils.js";
 
 export default class JsonData {
     public _username: string;

@@ -1,4 +1,4 @@
-import JsonData from "./json";
+import JsonData from "./json.js";
 
 export async function cookieGTK(): Promise<string | null> {
     const gtkR = await fetch(
@@ -9,13 +9,18 @@ export async function cookieGTK(): Promise<string | null> {
     return gtkR.headers.get("set-cookie");
 }
 
-export async function login(json: JsonData, cookie: string): Promise<string[]> {
+export async function login(
+    json: JsonData,
+    cookie: string,
+): Promise<(string | boolean)[]> {
     const loginBody = JSON.stringify({
         identifiant: json.readJson("username"),
         motdepasse: json.readJson("password"),
         isRelogin: false,
         uuid: "",
     });
+
+    console.log(loginBody);
 
     const loginR = await fetch(
         "https://api.ecoledirecte.com/v3/login.awp?v=4.75.0",
@@ -33,7 +38,11 @@ export async function login(json: JsonData, cookie: string): Promise<string[]> {
 
     const loginData = await loginR.json();
 
-    console.log(`code : ${loginData.code}`);
+    if (loginData.code !== 200) {
+        console.log(loginData.message);
+        return [false, "", ""];
+    }
+
     const token = loginData.token;
     const eleveId = loginData.data.account[0].id;
 
