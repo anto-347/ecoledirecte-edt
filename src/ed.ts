@@ -6,7 +6,12 @@ export async function cookieGTK(): Promise<string | null> {
         { method: "GET" },
     );
 
-    return gtkR.headers.get("set-cookie");
+    const setCookie = gtkR.headers.get("set-cookie") ?? "";
+    console.log("set-cookie brut:", setCookie);
+    const gtkValue = setCookie.match(/GTK=([^;]+)/)?.[1] ?? "";
+    console.log("gtk extrait:", gtkValue);
+
+    return gtkValue;
 }
 
 export async function login(
@@ -31,12 +36,14 @@ export async function login(
                 "User-Agent":
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
                 "X-Gtk": cookie,
+                Cookie: `GTK=${cookie}`,
             },
             body: `data=${encodeURIComponent(loginBody)}`,
         },
     );
 
     const loginData = await loginR.json();
+    console.log(JSON.stringify(loginData, null, 2));
 
     if (loginData.code !== 200) {
         console.log(loginData.message, loginData.code);
@@ -46,5 +53,5 @@ export async function login(
     const token = loginData.token;
     const eleveId = loginData.data.accounts[0].id;
 
-    return [token, eleveId];
+    return [true, token, eleveId];
 }

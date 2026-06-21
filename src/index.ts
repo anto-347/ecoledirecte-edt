@@ -94,16 +94,9 @@ if (options["update"]) {
         );
         console.log("Veuillez l'enregistrer avec 'edt -p <password>'.");
     } else {
-        const cookie = await cookieGTK();
-
-        const cookieValue = cookie?.split(";")[0]?.split("=")[1];
-
-        if (!cookieValue) {
-            throw new Error("Valeur du cookie introuvable");
-        }
-        console.log(cookie);
-        console.log(cookieValue);
-        const loginData: (string | boolean)[] = await login(data, cookieValue);
+        const cookie: string = (await cookieGTK()) as string;
+        console.log(`cookie : ${cookie}`);
+        const loginData: (string | boolean)[] = await login(data, cookie);
         console.log(loginData);
         console.log("*********");
         console.log(typeof loginData);
