@@ -9,9 +9,6 @@ import JsonData from "./json.js";
 import { init } from "./utils.js";
 import { cookieGTK, login } from "./ed.js";
 
-// const { Command } = require("commander");
-// const figlet = require("figlet");
-
 const program = new Command();
 
 program
@@ -97,8 +94,16 @@ if (options["update"]) {
         );
         console.log("Veuillez l'enregistrer avec 'edt -p <password>'.");
     } else {
-        const cookie: string = (await cookieGTK()) as string;
-        const loginData: (string | boolean)[] = await login(data, cookie);
+        const cookie = await cookieGTK();
+
+        const cookieValue = cookie?.split(";")[0]?.split("=")[1];
+
+        if (!cookieValue) {
+            throw new Error("Valeur du cookie introuvable");
+        }
+        console.log(cookie);
+        console.log(cookieValue);
+        const loginData: (string | boolean)[] = await login(data, cookieValue);
         console.log(loginData);
         console.log("*********");
         console.log(typeof loginData);

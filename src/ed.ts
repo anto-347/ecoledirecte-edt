@@ -39,12 +39,12 @@ export async function login(
     const loginData = await loginR.json();
 
     if (loginData.code !== 200) {
-        console.log(loginData.message);
+        console.log(loginData.message, loginData.code);
         return [false, "", ""];
     }
 
     const token = loginData.token;
-    const eleveId = loginData.data.account[0].id;
+    const eleveId = loginData.data.accounts[0].id;
 
     return [token, eleveId];
 }
