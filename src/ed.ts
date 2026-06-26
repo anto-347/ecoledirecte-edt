@@ -9,20 +9,23 @@ export async function cookieGTK(): Promise<string | null> {
     const setCookie = gtkR.headers.get("set-cookie") ?? "";
     console.log("set-cookie brut:", setCookie);
     // const gtkValue = setCookie.match(/GTK=([^;]+)/)?.[1] ?? "";
-    // const gtkValue = (setCookie.match(/GTK=([^;]+)/)?.[1] ?? "").replace(
-    //     /[^a-fA-F0-9]/g,
-    //     "",
-    // );
     const gtkValue = (setCookie.match(/GTK=([^;]+)/)?.[1] ?? "").replace(
-        /\r\n/g,
+        /[^a-fA-F0-9]/g,
         "",
     );
+    // const gtkValue = (setCookie.match(/GTK=([^;]+)/)?.[1] ?? "").replace(
+    //     /\r\n/g,
+    //     "",
+    // );
 
-    const hexDecoded = Buffer.from(gtkValue, "hex").toString("utf-8");
-    console.log("hex decoded:", hexDecoded); // devrait donner du base64
+    // const hexDecoded = Buffer.from(gtkValue, "hex").toString("utf-8");
+    // console.log("hex decoded:", hexDecoded); // devrait donner du base64
 
-    const fullDecoded = Buffer.from(hexDecoded, "base64").toString("utf-8");
-    console.log("full decoded:", fullDecoded);
+    // const fullDecoded = Buffer.from(hexDecoded, "base64").toString("utf-8");
+    // console.log("full decoded:", fullDecoded);
+
+    let fullDecoded: string = gtkValue.replace("\n", "");
+    fullDecoded = fullDecoded.replace("\r", "");
 
     console.log("gtk extrait:", gtkValue);
 
